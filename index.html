@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de caja negra</title>
+</head>
+<body>
+    <label for="nombre">Nombre completo del estudiante:</label>
+    <input type="text" name="nombre" placeholder="Pedro Pedro Valenzuela Pelao" size="30" id="nombre">
+    <br>
+    <label for="nocuenta">Número de cuenta:</label>
+    <input type="text" name="nocuenta" placeholder="20168755" size="10" id="noCuenta">
+    <br>
+    <label for="gradogrupo">Nombre del estudiante:</label>
+    <input type="text" name="gradogrupo" placeholder="4B" size="1" id="gradoGrupo">
+    <br>
+    <button id="buttonFunction">Tomar asistencia del alumno en cuestión</button>
+    <p id="asistencia"></p>
+</body>
+</html>
+<script>
+    let button = document.getElementById("buttonFunction").addEventListener("click", ()=>{
+        let nombre = document.getElementById("nombre").value;
+        let noCuenta = document.getElementById("noCuenta").value;
+        let gradoGrupo = document.getElementById("gradoGrupo").value;
+        validarAlumno(nombre, noCuenta, gradoGrupo);
+    })
+    function validarAlumno(nombre, numeroCuenta, gradoGrupo) {
+    // Validación del nombre del alumno
+    const nombreRegex = /^([a-zA-ZáéíóúÁÉÍÓÚ]+\s){2,}[a-zA-ZáéíóúÁÉÍÓÚ]+$/;
+
+    if (!nombreRegex.test(nombre)) {
+        return "Nombre invalido";
+    }
+
+    // Validación del número de cuenta
+    const cuentaRegex = /^\d{8}$/;
+    if (!cuentaRegex.test(numeroCuenta)) {
+        return "El número de cuenta debe tener 8 dígitos solamente";
+    }
+
+    // Validación del grado y grupo
+    const gradoGrupoRegex = /^[1-8][A-K]$/
+    if (!gradoGrupoRegex.test(gradoGrupo)) {
+        return "El grado y grupo debe ser de 2 dígitos (ej. 2B), donde el primer dígito sea un número y el segundo una letra en mayúscula";
+    }
+
+    // Si todas las validaciones pasan, retornamos null indicando que no hay errores
+    return tomarAsistencia(gradoGrupo);
+}
+
+    function tomarAsistencia(gradoGrupo){
+        let asistencia = 1
+
+        if(gradoGrupo == '7G') {
+            asistencia = 0
+        }
+        
+        let data = gradoGrupo.split('')
+
+        let grado = Number(data[0])
+        let grupo = data[1]
+
+        const grupoRegex = /^[A-C]$/
+
+        grupoRegex.test(grupo) ? asistencia *= 2 : "";
+
+        grado >= 4 ? asistencia *= 3 : ""
+
+        console.log(asistencia)
+    }
+
+// Ejemplo de uso:
+const nombre = "Juan Pérez Gonzalez Perzgalga";
+const numeroCuenta = "12345678";
+const gradoGrupo = "6B";
+
+const error = validarAlumno(nombre, numeroCuenta, gradoGrupo);
+if (error) {
+    console.log("Error:", error);
+} else {
+    console.log("Los datos del alumno son válidos.");
+
+
+}
+
+</script>
+
+
+<!-- Por equipos, crear un registrador de asistencia que pida la siguiente información del estudiante: (1) nombre completo, (2) número de cuenta, y (3) grado y grupo. Donde:
+    El nombre del alumno deberá tener un nombre (o más) y sus dos apellidos
+    El número de cuenta deberá tener 8 dígitos solamente
+    El grado y grupo debe ser de 2 dígitos (ej. 2B)
+    El primer dígito debe ser número
+    El segundo dígito debe ser una letra en mayúscula
+Condiciones:
+    Si el estudiante pertenece a los grupos A, B, o C su asistencia cuenta doble
+    Si el estudiante pertenece a grados 4 o mayores, su asistencia cuenta el triple
+    Si el estudiante pertenece al grupo 7G, no se contará su asistencia
+Los grados van de 1 a 8, y los grupos son de la A a la K -->
